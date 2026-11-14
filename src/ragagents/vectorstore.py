@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import re
 from collections.abc import Iterable
 
 import chromadb
@@ -69,3 +70,14 @@ def format_docs(docs: Iterable[Document]) -> str:
 def unique(items: Iterable[str]) -> list[str]:
     """Remove duplicatas mantendo a ordem."""
     return list(dict.fromkeys(items))
+
+
+def cited_by_number(answer: str, docs: list[Document]) -> list[str]:
+    """Fontes citadas como [n] na resposta do RAG simples (n = posição do trecho)."""
+    numbers = {int(n) for n in re.findall(r"\[(\d+)\]", answer)}
+    return unique(source_label(d) for i, d in enumerate(docs, start=1) if i in numbers)
+
+
+def cited_by_name(answer: str, sources: Iterable[str]) -> list[str]:
+    """Fontes cujo nome de arquivo aparece no texto da resposta do time."""
+    return [s for s in unique(sources) if s.split(",")[0] in answer]

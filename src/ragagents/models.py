@@ -7,6 +7,7 @@ OpenAI para Gemini, Anthropic ou Ollama é só mudar o .env (e instalar o extra)
 from __future__ import annotations
 
 import os
+import warnings
 
 from langchain.chat_models import init_chat_model
 from langchain.embeddings import init_embeddings
@@ -15,6 +16,9 @@ from langchain_core.language_models import BaseChatModel
 
 from .config import Settings
 from .offline import OFFLINE_EMBEDDING_MODEL, HashingEmbeddings
+
+# Modelos Gemini 3.x ignoram `temperature` e avisam a cada chamada; o aviso só polui a saída.
+warnings.filterwarnings("ignore", message=r".*uses fixed sampling defaults.*")
 
 # Variável de chave esperada por provedor (Ollama roda local e não precisa).
 _API_KEY_ENV = {
@@ -40,7 +44,9 @@ def _require_key(model: str) -> None:
 
 def get_chat_model(settings: Settings) -> BaseChatModel:
     _require_key(settings.chat_model)
-    return init_chat_model(settings.chat_model, temperature=0)
+    # Tempo limite e poucas tentativas: com cota estourada (429), o padrão de alguns
+    # provedores é tentar várias vezes em silêncio, o que parece travamento.
+    return init_chat_model(settings.chat_model, temperature=0, timeout=60, max_retries=2)
 
 
 def get_embeddings(settings: Settings) -> Embeddings:

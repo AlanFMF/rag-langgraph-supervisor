@@ -121,7 +121,7 @@ langgraph dev
 ## Tests
 
 ```bash
-pytest          # 19 tests, no network, no API keys
+pytest          # 20 tests, no network, no API keys
 ruff check .
 ```
 

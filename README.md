@@ -151,7 +151,7 @@ com o time e ver o estado passo a passo.
 ## Testes
 
 ```bash
-pytest          # 19 testes, sem rede e sem chaves de API
+pytest          # 20 testes, sem rede e sem chaves de API
 ruff check .
 ```
 

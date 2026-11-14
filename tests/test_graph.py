@@ -100,3 +100,20 @@ def test_research_notes_are_passed_as_user_context() -> None:
     assert isinstance(converted[1], HumanMessage)
     assert converted[1].content.endswith("fato X")
     assert isinstance(converted[2], AIMessage) and converted[2].name is None
+
+
+def test_only_cited_sources_are_listed() -> None:
+    from langchain_core.documents import Document
+
+    from ragagents.vectorstore import cited_by_name, cited_by_number
+
+    docs = [
+        Document(page_content="a", metadata={"source": "politica-home-office.md"}),
+        Document(page_content="b", metadata={"source": "politica-reembolso.md"}),
+    ]
+    assert cited_by_number("R$ 320,00 por noite [2].", docs) == ["politica-reembolso.md"]
+    assert cited_by_number("sem citação", docs) == []
+
+    sources = ["politica-reembolso.md", "guia-de-beneficios.pdf, p. 1", "politica-home-office.md"]
+    answer = "Não são reembolsadas (fonte: politica-reembolso.md)."
+    assert cited_by_name(answer, sources) == ["politica-reembolso.md"]

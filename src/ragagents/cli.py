@@ -22,12 +22,15 @@ def _cmd_ingest(settings: Settings, args: argparse.Namespace) -> None:
 def _cmd_ask(settings: Settings, args: argparse.Namespace) -> None:
     from .models import get_chat_model
     from .rag_chain import build_rag_chain
-    from .vectorstore import get_retriever, source_label, unique
+    from .vectorstore import cited_by_number, get_retriever, source_label, unique
 
     chain = build_rag_chain(get_chat_model(settings), get_retriever(settings))
     out = chain.invoke(args.question, run_config(settings, "ask"))
     print(out["answer"])
-    _print_sources(unique(source_label(d) for d in out["docs"]))
+    _print_sources(
+        cited_by_number(out["answer"], out["docs"]),
+        unique(source_label(d) for d in out["docs"]),
+    )
 
 
 def _cmd_team(settings: Settings, args: argparse.Namespace) -> None:
@@ -48,9 +51,12 @@ def _cmd_team(settings: Settings, args: argparse.Namespace) -> None:
                     print(f"[supervisor] -> {update.get('next')} ({update.get('reason')})")
                 elif node != "supervisor":
                     print(f"[{node}] concluiu")
+    from .vectorstore import cited_by_name
+
+    answer = final_answer(state)
     print()
-    print(final_answer(state))
-    _print_sources(final_sources(state))
+    print(answer)
+    _print_sources(cited_by_name(answer, final_sources(state)), final_sources(state))
 
 
 def _cmd_graph(settings: Settings, args: argparse.Namespace) -> None:
@@ -86,9 +92,11 @@ def _cmd_eval(settings: Settings, args: argparse.Namespace) -> None:
     print(f"Experimento '{name}' registrado no LangSmith (aba Datasets & Experiments).")
 
 
-def _print_sources(sources: list[str]) -> None:
+def _print_sources(cited: list[str], consulted: list[str]) -> None:
+    """Mostra as fontes citadas na resposta; sem citação, mostra o que foi consultado."""
+    title, sources = ("Fontes citadas", cited) if cited else ("Trechos consultados", consulted)
     if sources:
-        print("\nFontes:")
+        print(f"\n{title}:")
         for s in sources:
             print(f"  - {s}")
 
