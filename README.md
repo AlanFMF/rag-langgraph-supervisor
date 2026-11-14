@@ -138,6 +138,10 @@ experimento com duas métricas:
 
 Os dois experimentos podem ser comparados lado a lado na aba *Datasets & Experiments*.
 
+> Em cotas gratuitas (como a do Gemini), defina `LLM_REQUESTS_PER_MINUTE` no `.env`.
+> Um limitador único, compartilhado pelos agentes e pelo juiz, espaça as chamadas
+> para a avaliação não falhar com erro 429.
+
 ## LangGraph Studio (opcional)
 
 ```bash
@@ -151,7 +155,7 @@ com o time e ver o estado passo a passo.
 ## Testes
 
 ```bash
-pytest          # 20 testes, sem rede e sem chaves de API
+pytest          # 22 testes, sem rede e sem chaves de API
 ruff check .
 ```
 

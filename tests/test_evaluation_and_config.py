@@ -71,3 +71,20 @@ def test_settings_validation() -> None:
         Settings(chunk_size=100, chunk_overlap=100)
     with pytest.raises(ValueError, match="provedor:modelo"):
         Settings(chat_model="gpt-4.1-mini")
+
+
+def test_rate_limiter_is_shared_between_models(monkeypatch: pytest.MonkeyPatch) -> None:
+    from ragagents.models import get_chat_model
+
+    monkeypatch.setenv("OPENAI_API_KEY", "sk-teste")
+    limited = Settings(chat_model="openai:gpt-4.1-mini", requests_per_minute=12)
+    a, b = get_chat_model(limited), get_chat_model(limited)
+    assert a.rate_limiter is not None and a.rate_limiter is b.rate_limiter
+    assert get_chat_model(Settings(chat_model="openai:gpt-4.1-mini")).rate_limiter is None
+
+
+def test_requests_per_minute_from_env(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("LLM_REQUESTS_PER_MINUTE", "12")
+    assert Settings.from_env(dotenv=False).requests_per_minute == 12
+    monkeypatch.setenv("LLM_REQUESTS_PER_MINUTE", "0")
+    assert Settings.from_env(dotenv=False).requests_per_minute == 0

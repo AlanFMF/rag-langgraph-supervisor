@@ -9,7 +9,7 @@ from pathlib import Path
 from dotenv import load_dotenv
 
 
-def _positive_int(name: str, default: int) -> int:
+def _int_env(name: str, default: int, *, minimum: int = 1) -> int:
     raw = os.getenv(name)
     if raw is None or not raw.strip():
         return default
@@ -17,8 +17,8 @@ def _positive_int(name: str, default: int) -> int:
         value = int(raw)
     except ValueError as exc:
         raise ValueError(f"{name} precisa ser um número inteiro (recebi {raw!r}).") from exc
-    if value <= 0:
-        raise ValueError(f"{name} precisa ser maior que zero (recebi {value}).")
+    if value < minimum:
+        raise ValueError(f"{name} precisa ser no mínimo {minimum} (recebi {value}).")
     return value
 
 
@@ -39,6 +39,9 @@ class Settings:
     # Teto de decisões do supervisor por pergunta (evita laço infinito entre agentes).
     max_steps: int = 6
 
+    # Limite de chamadas ao LLM por minuto (0 = sem limite). Útil em cotas gratuitas.
+    requests_per_minute: int = 0
+
     def __post_init__(self) -> None:
         if self.chunk_overlap >= self.chunk_size:
             raise ValueError("CHUNK_OVERLAP precisa ser menor que CHUNK_SIZE.")
@@ -58,8 +61,11 @@ class Settings:
             docs_dir=Path(os.getenv("DOCS_DIR", str(cls.docs_dir))),
             chroma_dir=Path(os.getenv("CHROMA_DIR", str(cls.chroma_dir))),
             collection=os.getenv("CHROMA_COLLECTION", cls.collection),
-            chunk_size=_positive_int("CHUNK_SIZE", cls.chunk_size),
-            chunk_overlap=_positive_int("CHUNK_OVERLAP", cls.chunk_overlap),
-            top_k=_positive_int("TOP_K", cls.top_k),
-            max_steps=_positive_int("MAX_STEPS", cls.max_steps),
+            chunk_size=_int_env("CHUNK_SIZE", cls.chunk_size),
+            chunk_overlap=_int_env("CHUNK_OVERLAP", cls.chunk_overlap),
+            top_k=_int_env("TOP_K", cls.top_k),
+            max_steps=_int_env("MAX_STEPS", cls.max_steps),
+            requests_per_minute=_int_env(
+                "LLM_REQUESTS_PER_MINUTE", cls.requests_per_minute, minimum=0
+            ),
         )

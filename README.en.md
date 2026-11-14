@@ -111,6 +111,10 @@ The dataset is created in LangSmith on the first run. Each command logs an exper
 `source_hit` (was the expected document retrieved?) and `correctness` (LLM-as-judge against
 the reference). Compare both experiments side by side under *Datasets & Experiments*.
 
+> On free tiers (such as Gemini's), set `LLM_REQUESTS_PER_MINUTE` in `.env`. A single rate
+> limiter shared by the agents and the judge spaces out calls so the evaluation doesn't
+> fail with 429 errors.
+
 ## LangGraph Studio (optional)
 
 ```bash
@@ -121,7 +125,7 @@ langgraph dev
 ## Tests
 
 ```bash
-pytest          # 20 tests, no network, no API keys
+pytest          # 22 tests, no network, no API keys
 ruff check .
 ```
 
