@@ -142,6 +142,32 @@ Os dois experimentos podem ser comparados lado a lado na aba *Datasets & Experim
 > Um limitador único, compartilhado pelos agentes e pelo juiz, espaça as chamadas
 > para a avaliação não falhar com erro 429.
 
+## Resultados
+
+Avaliação registrada no LangSmith em 14/11/2026, com `gemini-3.5-flash-lite` (respostas e
+juiz) e `gemini-embedding-001` (busca):
+
+| Modo | correctness | source_hit | Erros |
+|---|---|---|---|
+| `chain` (RAG simples) | 9/9 (1,00) | 8/8 (1,00) | 0% |
+| `team` (supervisor + 2 agentes) | 9/9 (1,00) | 8/8 (1,00) | 0% |
+
+O `source_hit` conta 8 perguntas porque uma delas, de propósito, não tem resposta nos
+documentos. Nela, os dois modos disseram corretamente que não encontraram a informação.
+
+**Como ler esses números:**
+
+- **Neste conjunto, os dois modos empatam.** O time não trouxe ganho de acerto e faz várias
+  chamadas ao modelo por pergunta (supervisor, pesquisador e redator), contra uma só do RAG
+  simples. Para perguntas diretas como estas, o RAG simples é a opção mais barata.
+- **A vantagem esperada do time está nas perguntas com várias partes**, em que o supervisor
+  pede uma segunda rodada de pesquisa (isso aparece nos traces). Medir esse ganho exige um
+  conjunto de perguntas mais difícil, que é o próximo passo.
+- **9 perguntas é um teste de sanidade, não um benchmark.** O juiz é o mesmo modelo que
+  responde, o que pode deixar as notas generosas.
+- **As latências do experimento não estão aqui** porque incluem a espera do limitador de
+  chamadas (cota gratuita) e não representam a velocidade real.
+
 ## LangGraph Studio (opcional)
 
 ```bash

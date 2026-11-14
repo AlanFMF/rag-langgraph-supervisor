@@ -115,6 +115,32 @@ the reference). Compare both experiments side by side under *Datasets & Experime
 > limiter shared by the agents and the judge spaces out calls so the evaluation doesn't
 > fail with 429 errors.
 
+## Results
+
+Evaluation logged in LangSmith on 2026-11-14, using `gemini-3.5-flash-lite` (answers and
+judge) and `gemini-embedding-001` (retrieval):
+
+| Mode | correctness | source_hit | Errors |
+|---|---|---|---|
+| `chain` (plain RAG) | 9/9 (1.00) | 8/8 (1.00) | 0% |
+| `team` (supervisor + 2 agents) | 9/9 (1.00) | 8/8 (1.00) | 0% |
+
+`source_hit` covers 8 questions because one question deliberately has no answer in the
+documents; both modes correctly said the information was not found.
+
+**How to read these numbers:**
+
+- **On this set, both modes tie.** The team brings no accuracy gain and makes several model
+  calls per question (supervisor, researcher and writer) versus one for plain RAG. For direct
+  questions like these, plain RAG is the cheaper choice.
+- **The team's expected advantage is on multi-part questions**, where the supervisor asks for
+  a second research round (visible in the traces). Measuring that gain requires a harder
+  question set, which is the next step.
+- **9 questions is a sanity check, not a benchmark.** The judge is the same model that
+  answers, which may make scores generous.
+- **Experiment latencies are omitted** because they include the rate limiter's waiting time
+  (free tier) and do not reflect real speed.
+
 ## LangGraph Studio (optional)
 
 ```bash
