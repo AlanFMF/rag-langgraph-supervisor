@@ -1,0 +1,47 @@
+[
+  {
+    "question": "Qual é o limite de reembolso de hospedagem em capitais?",
+    "answer": "R$ 320,00 por noite.",
+    "source": "politica-reembolso.md"
+  },
+  {
+    "question": "Em quantos dias depois da viagem preciso pedir o reembolso?",
+    "answer": "Em até 30 dias corridos após o fim da viagem; depois disso só com aprovação do diretor da área.",
+    "source": "politica-reembolso.md"
+  },
+  {
+    "question": "Quantos dias por semana posso trabalhar de casa e qual é o valor do auxílio home office?",
+    "answer": "Até 3 dias por semana, com auxílio de R$ 150,00 por mês.",
+    "source": "politica-home-office.md"
+  },
+  {
+    "question": "Com quanta antecedência preciso pedir a adesão ao home office?",
+    "answer": "Pelo menos 5 dias úteis de antecedência, pelo portal Pulso.",
+    "source": "politica-home-office.md"
+  },
+  {
+    "question": "Cliquei em um link de phishing. Em quanto tempo e para onde devo avisar?",
+    "answer": "Em até 2 horas, pelo e-mail seguranca@aurora.exemplo ou pelo ramal 4040.",
+    "source": "seguranca-da-informacao.md"
+  },
+  {
+    "question": "Qual o tamanho mínimo de senha exigido?",
+    "answer": "14 caracteres, com MFA obrigatório no e-mail, na VPN e no Pulso.",
+    "source": "seguranca-da-informacao.md"
+  },
+  {
+    "question": "Quanto é o auxílio academia?",
+    "answer": "R$ 80,00 por mês, pago como reembolso mediante comprovante.",
+    "source": "guia-de-beneficios.pdf"
+  },
+  {
+    "question": "Posso pedir reembolso de bebida alcoólica no jantar de uma viagem? E qual o limite diário de alimentação?",
+    "answer": "Não, bebidas alcoólicas nunca são reembolsadas. O limite de alimentação é R$ 90,00 por dia.",
+    "source": "politica-reembolso.md"
+  },
+  {
+    "question": "Qual é o salário do diretor financeiro?",
+    "answer": "Essa informação não consta nos documentos.",
+    "source": null
+  }
+]

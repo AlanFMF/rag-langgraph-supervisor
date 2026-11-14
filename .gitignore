@@ -1,0 +1,25 @@
+# Segredos
+.env
+
+# Banco vetorial local (gerado pelo `ragagents ingest`)
+.chroma/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+.pytest_cache/
+.ruff_cache/
+
+# LangGraph Studio
+.langgraph_api/
+
+# Editores / SO
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db

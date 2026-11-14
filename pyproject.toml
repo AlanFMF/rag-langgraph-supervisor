@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "rag-langgraph-supervisor"
+version = "0.1.0"
+description = "RAG sobre documentos com LangChain + Chroma, rastreado no LangSmith, e um time de agentes no LangGraph coordenado por um supervisor."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+authors = [{ name = "Alan Fabrício de Morais Filho" }]
+keywords = ["rag", "langchain", "langgraph", "langsmith", "chroma", "agents", "llm"]
+dependencies = [
+  "langchain>=1.0",
+  "langchain-core>=1.0",
+  "langgraph>=1.0",
+  "langchain-chroma>=1.0",
+  "langchain-text-splitters>=1.0",
+  "langchain-openai>=1.0",
+  "langsmith>=0.4",
+  "pypdf>=5",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+# Provedores alternativos (opcionais): Gemini tem cota gratuita; Ollama roda local.
+google = ["langchain-google-genai>=2"]
+ollama = ["langchain-ollama>=0.3"]
+anthropic = ["langchain-anthropic>=0.3"]
+# Interface visual do grafo (LangGraph Studio via `langgraph dev`).
+studio = ["langgraph-cli[inmem]>=0.3"]
+dev = ["pytest>=8", "ruff>=0.6"]
+
+[project.scripts]
+ragagents = "ragagents.cli:main"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/ragagents"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B", "SIM"]

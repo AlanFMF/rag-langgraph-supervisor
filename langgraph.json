@@ -1,0 +1,8 @@
+{
+  "dependencies": ["."],
+  "graphs": {
+    "rag_team": "./src/ragagents/studio.py:graph"
+  },
+  "env": ".env",
+  "python_version": "3.12"
+}
